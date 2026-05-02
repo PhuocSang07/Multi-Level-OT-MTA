@@ -12,6 +12,13 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Baseline scripts (local-only, not tracked)
+*_baseline.sh
+
+# Training output / wandb
+output/
+wandb/
+
 # Logs
 *.out
 nohup.out
