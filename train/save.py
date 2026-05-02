@@ -8,14 +8,17 @@ from models.checkpoint_handler import save_model_checkpoint, save_model_and_opti
 
 
 def _unwrap_student(model, train_config):
-    """For distillation: unwrap DistillationModel → StudentWrapper → HF model."""
+    """For distillation: unwrap DDP → DistillationModel → StudentWrapper → HF model."""
+    m = model.module if hasattr(model, 'module') else model
     if train_config.distillation:
-        return model.student.model
-    return model
+        return m.student.model
+    return m
 
 
 def save_model(model, optimizer, step, train_config, distil_config, fsdp_config, rank):
-    if train_config.enable_fsdp or distil_config.enable_fsdp:
+    is_dist = (train_config.enable_fsdp or distil_config.enable_fsdp or
+               (dist.is_initialized() and dist.get_world_size() > 1))
+    if is_dist:
         dist.barrier()
     path = fr"{train_config.output_dir}/{step+1}"
     try: os.mkdir(path)
@@ -45,7 +48,7 @@ def save_model(model, optimizer, step, train_config, distil_config, fsdp_config,
             _unwrap_student(model, train_config).save_pretrained(path)
             print(f"Model are saved in {path} directory")
 
-    if train_config.enable_fsdp or distil_config.enable_fsdp:
+    if is_dist:
         dist.barrier()
 
 def save_train_params(train_config, fsdp_config, rank):

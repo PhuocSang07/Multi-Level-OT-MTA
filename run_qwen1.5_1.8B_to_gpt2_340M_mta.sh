@@ -3,7 +3,7 @@
 #        → openai-community/gpt2-medium (student, 1024-dim, 24 layers)
 # Variant: MTA (OT + Span loss, no entropy weight)
 
-GPUS=(0 1)
+GPUS=(0 1 2 3 4 5 6 7)
 export CUDA_VISIBLE_DEVICES=$(IFS=,; echo "${GPUS[*]}")
 export TOKENIZERS_PARALLELISM=false
 
@@ -11,7 +11,7 @@ MASTER_ADDR=localhost
 MASTER_PORT=66$(($RANDOM%90+10))
 NNODES=1
 NODE_RANK=0
-GPUS_PER_NODE=1   # single-process model parallelism
+GPUS_PER_NODE=${#GPUS[@]}
 
 DISTRIBUTED_ARGS="--nproc_per_node $GPUS_PER_NODE \
                   --nnodes $NNODES \
@@ -26,8 +26,8 @@ OPTS+=" --model_name openai-community/gpt2-medium"
 OPTS+=" --dataset.file $SCRIPT_DIR/llm_distillation/datasets/loader/dolly.py"
 OPTS+=" --lr 5e-4"
 OPTS+=" --num_epochs 10"
-OPTS+=" --batch_size_training 4"
-OPTS+=" --gradient_accumulation_steps 2"
+OPTS+=" --batch_size_training 2"
+OPTS+=" --gradient_accumulation_steps 1"
 OPTS+=" --val_batch_size 8"
 OPTS+=" --output_dir $SCRIPT_DIR/output/qwen1.5-1.8B-to-gpt2-340M/mta"
 OPTS+=" --distillation"
@@ -39,7 +39,7 @@ OPTS+=" --distillation_config_teacher_temperature 2.0"
 OPTS+=" --distillation_config_pure_bf16"
 OPTS+=" --student_device cuda:0"
 OPTS+=" --teacher_device cuda:1"
-OPTS+=" --save_step 2000"
+OPTS+=" --save_step 2500"
 OPTS+=" --f 1"
 OPTS+=" --span_loss_weight 2.0"
 OPTS+=" --student_layer_mapping 14,16,18,20,22,24"

@@ -3,7 +3,7 @@
 #        → openai-community/gpt2 (student, 768-dim, 12 layers)
 # Variant: MTA + Entropy Weight
 
-GPUS=(1)
+GPUS=(0 1 2 3 4 5 6 7)
 export CUDA_VISIBLE_DEVICES=$(IFS=,; echo "${GPUS[*]}")
 export TOKENIZERS_PARALLELISM=false
 export DS_IGNORE_CUDA_DETECTION=1
@@ -40,7 +40,7 @@ OPTS+=" --distillation_config_teacher_temperature 2.0"
 OPTS+=" --distillation_config_pure_bf16"
 OPTS+=" --student_device cuda:0"
 OPTS+=" --teacher_device cuda:0"
-OPTS+=" --save_step 2000"
+OPTS+=" --save_step 2500"
 OPTS+=" --f 1"
 OPTS+=" --span_loss_weight 2.0"
 OPTS+=" --entropy_weight"

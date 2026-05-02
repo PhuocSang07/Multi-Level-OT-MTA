@@ -83,16 +83,12 @@ def main():
     torch.manual_seed(train_config.seed)
     random.seed(train_config.seed)
 
-    if train_config.enable_fsdp or distil_config.enable_fsdp:
-        setup()
-        local_rank = int(os.environ["LOCAL_RANK"])
-        rank = int(os.environ["RANK"])
-    else: rank = 0
-
-    if torch.distributed.is_initialized():
-        torch.cuda.set_device(local_rank)
-        clear_gpu_cache(local_rank)
-        setup_environ_flags(rank)
+    setup()
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+    rank = int(os.environ.get("RANK", 0))
+    torch.cuda.set_device(local_rank)
+    clear_gpu_cache(local_rank)
+    setup_environ_flags(rank)
 
     # Load Model and Tokenizer
     if train_config.distillation:
@@ -117,11 +113,21 @@ def main():
         distil_config.student_device = args.student_device
         distil_config.teacher_device = args.teacher_device
 
+        # DDP: each rank owns its own copy of both models on its local GPU
+        if torch.distributed.get_world_size() > 1:
+            distil_config.student_device = f"cuda:{local_rank}"
+            distil_config.teacher_device = f"cuda:{local_rank}"
+
         student_tokenizer, teacher_tokenizer, model = get_distillation_models(
             train_config, distil_config, fsdp_config, rank, vars(args))
     else:
         tokenizer, model = get_model(train_config, fsdp_config, rank, vars(args))
     if rank == 0: print(model)
+
+    # DDP: wrap model so student gradients are all-reduced across ranks
+    if torch.distributed.get_world_size() > 1:
+        from torch.nn.parallel import DistributedDataParallel as DDP
+        model = DDP(model, device_ids=[local_rank], find_unused_parameters=False)
 
     # Load Data
     data_config.encoder_decoder = train_config.encoder_decoder
@@ -149,7 +155,7 @@ def main():
         teacher_train_dataloader if train_config.distillation else None,
         teacher_eval_dataloader if train_config.distillation else None,
         fsdp_config if train_config.enable_fsdp else None,
-        local_rank if train_config.enable_fsdp or distil_config.enable_fsdp else None,
+        local_rank,
         rank,
         f,
         student_tokenizer=student_tokenizer if train_config.distillation else None,

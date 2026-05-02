@@ -12,7 +12,7 @@ MASTER_ADDR=localhost
 MASTER_PORT=66$(($RANDOM%90+10))
 NNODES=1
 NODE_RANK=0
-GPUS_PER_NODE=1   # single-process model parallelism; teacher uses device_map=auto
+GPUS_PER_NODE=${#GPUS[@]}
 
 DISTRIBUTED_ARGS="--nproc_per_node $GPUS_PER_NODE \
                   --nnodes $NNODES \
@@ -27,8 +27,8 @@ OPTS+=" --model_name TinyLlama/TinyLlama_v1.1"
 OPTS+=" --dataset.file $SCRIPT_DIR/llm_distillation/datasets/loader/dolly.py"
 OPTS+=" --lr 1e-4"
 OPTS+=" --num_epochs 10"
-OPTS+=" --batch_size_training 4"
-OPTS+=" --gradient_accumulation_steps 2"
+OPTS+=" --batch_size_training 2"
+OPTS+=" --gradient_accumulation_steps 1"
 OPTS+=" --val_batch_size 16"
 OPTS+=" --output_dir $SCRIPT_DIR/output/mistral-7B-to-tinyllama-1.1B"
 OPTS+=" --distillation"
@@ -39,9 +39,9 @@ OPTS+=" --distillation_config_student_temperature 1.0"
 OPTS+=" --distillation_config_teacher_temperature 2.0"
 OPTS+=" --distillation_config_pure_bf16"
 OPTS+=" --student_device cuda:0"
-OPTS+=" --teacher_device auto"
+OPTS+=" --teacher_device cuda:0"
 OPTS+=" --entropy_weight"
-OPTS+=" --save_step 2000"
+OPTS+=" --save_step 2500"
 OPTS+=" --f 1"
 OPTS+=" --span_loss_weight 3.0"
 OPTS+=" --student_layer_mapping 11,14,18,22"
