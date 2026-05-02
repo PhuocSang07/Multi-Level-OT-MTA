@@ -21,4 +21,6 @@ wandb/
 
 # Logs
 *.out
+*.log
 nohup.out
+logs/

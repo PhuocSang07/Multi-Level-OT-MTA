@@ -16,6 +16,9 @@ run() {
 
 run install.sh
 
+# Activate the venv installed above so torchrun is on PATH for all sub-scripts
+source "$SCRIPT_DIR/.venv/bin/activate"
+
 # Qwen1.5-1.8B → GPT-2 120M
 run run_qwen1.5_1.8B_to_gpt2_120M_mta.sh
 run run_qwen1.5_1.8B_to_gpt2_120M_mta_ew.sh
