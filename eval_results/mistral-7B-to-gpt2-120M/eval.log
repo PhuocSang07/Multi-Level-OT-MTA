@@ -1,0 +1,56 @@
+Loading tokenizer: openai-community/gpt2
+Loading model: 
+Traceback (most recent call last):
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 422, in cached_files
+    hf_hub_download(
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 84, in _inner_fn
+    validate_repo_id(arg_value)
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 138, in validate_repo_id
+    raise HFValidationError(
+huggingface_hub.errors.HFValidationError: Repo id must use alphanumeric chars, '-', '_' or '.'. The name cannot start or end with '-' or '.' and the maximum length is 96: ''.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/phongdq/projects/mta/Multi-Level-OT/eval_generate.py", line 225, in <module>
+    main()
+  File "/mnt/phongdq/projects/mta/Multi-Level-OT/eval_generate.py", line 167, in main
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 280, in from_pretrained
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 278, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 473, in cached_files
+    raise OSError(f"{e}") from e
+OSError: Repo id must use alphanumeric chars, '-', '_' or '.'. The name cannot start or end with '-' or '.' and the maximum length is 96: ''.
+Loading tokenizer: openai-community/gpt2
+Loading model: 
+Traceback (most recent call last):
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 422, in cached_files
+    hf_hub_download(
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 84, in _inner_fn
+    validate_repo_id(arg_value)
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 138, in validate_repo_id
+    raise HFValidationError(
+huggingface_hub.errors.HFValidationError: Repo id must use alphanumeric chars, '-', '_' or '.'. The name cannot start or end with '-' or '.' and the maximum length is 96: ''.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/phongdq/projects/mta/Multi-Level-OT/eval_generate.py", line 225, in <module>
+    main()
+  File "/mnt/phongdq/projects/mta/Multi-Level-OT/eval_generate.py", line 167, in main
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 280, in from_pretrained
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 278, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/phongdq/projects/mta/.venv/lib/python3.12/site-packages/transformers/utils/hub.py", line 473, in cached_files
+    raise OSError(f"{e}") from e
+OSError: Repo id must use alphanumeric chars, '-', '_' or '.'. The name cannot start or end with '-' or '.' and the maximum length is 96: ''.

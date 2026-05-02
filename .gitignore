@@ -1,0 +1,17 @@
+# Model checkpoints / weights
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# HuggingFace dataset cache
+*.arrow
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.out
+nohup.out
